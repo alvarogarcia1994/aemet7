@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  text-decoration: none;
+}
+
+
+body {
+    background-image: url('../imagenes/autumn.jpg');
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-size: cover;
+    color: white;
+}
+
+#menumovil {
+  display: none; 
+}
+
+@media only screen and (max-width: 1199px) {
+  #menumovil { display: block; }
+  #menu-main-navigation { display: none; }
+}
+
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: orange;
+  font-weight: bold;
+  color: black;
+}
+
+section{
+  visibility: hidden;
+  margin-top: 70px;
+  opacity: 0;
+  transition: opacity 0.5s ease, visibility 0s 0.5s;
+  text-shadow: 3px 3px black;
+}
+
+.visible {
+  visibility: visible;
+  opacity: 1; 
+  transition: opacity 0.5s ease;
+}
+
+h2{
+  margin-top: 100px; 
+}
+
+#tarjetas{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); 
+  gap: 40px; 
+  margin-top: 20px;
+  margin-bottom: 20px; 
+  margin-right: 20px;
+  padding: 10px; 
+  border-radius: 10px;
+  list-style: none;
+}
+
+h3{
+  margin-top: 20px;
+}
+
+.provincia{
+  padding: 15px; 
+  background-color: rgba(255, 165, 0, 0.5); 
+  border-radius: 8px; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+  margin: 20px;
+}
+
+img {
+  width: 200px;
+  height: 300px;
+  object-fit: cover;
+}
+
+
+#foot{
+  position: relative;
+  height: 50px;
+  width: 100%;
+  z-index: 1000;
+  background-color: orange;
+  text-align: center;
+  font-weight: bold;
+  bottom: -50px;
+  color: black;
+}

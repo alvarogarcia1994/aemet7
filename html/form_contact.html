@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Formulario de contacto</title>
+         <!-- CSS -->
+        <link rel="stylesheet" href="../css/contacto.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/SlickNav/1.0.10/slicknav.min.css" integrity="sha512-heyoieAHmpAL3BdaQMsbIOhVvGb4+pl4aGCZqWzX/f1BChRArrBy/XUZDHW9WVi5p6pf92pX4yjkfmdaIYa2QQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        
+        <!-- CDN -->
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/SlickNav/1.0.10/jquery.slicknav.min.js" integrity="sha512-FmCXNJaXWw1fc3G8zO3WdwR2N23YTWDFDTM3uretxVIbZ7lvnjHkciW4zy6JGvnrgjkcNEk8UNtdGTLs2GExAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    </head>
+
+    <body>
+
+        <header>  
+            <nav id="topnav" role="navigation">
+                <div id="menumovil"></div>
+                <ul class="sortable-menu" id="menu-main-navigation">
+                    <li><a href="main_menu.html">Home page</a></li>
+                    <li class="current"><a href="form_contact.html">Formulario de contacto</a></li>
+                    <li><a href="provincias.html">Miscelánea</a></li>
+                </ul>     
+            </nav>
+        </header>
+        
+        <form id="datos">
+            <div class="form-container">
+                <div class="titulo">
+                    <h1>Formulario de contacto</h1>
+                </div>
+
+                <div class="nombre">
+                    <label for="nombre">Nombre: </label>
+                    <input type="text" id="nombre" name="nombre"/>
+                </div>
+            
+            
+                <div class="email">    
+                    <label for="email">Email: </label>
+                    <input type="text" name="email" id="email"/>
+                </div>
+            
+                <div class="comentarios">
+                    <label for="comentarios">Comentarios: </label>
+                    <textarea name="comentarios" id="comentarios"></textarea>
+                </div>
+            </div>
+            
+            <div id="submit">
+                <button type="submit">Enviar</button>
+            </div> 
+        
+        </form>
+
+        <div id="foot">
+            <footer>
+                <span>2024 &copy; All Rights Reserved</span>
+            </footer>
+        </div>
+
+        <script>
+
+            // JQuery code starts here
+            $(document).ready(function(){
+
+                // Slicknav
+                $('.sortable-menu').slicknav({
+                    prependTo: '#menumovil'
+                });
+
+                // Variables
+                var campoNombre = $("[name='nombre']");
+                var campoEmail = $("[name='email']")
+
+                // Name validation field
+                $("#nombre").blur(function(){
+                    var nombre = $(this).val();  
+                    $("#warning-uno").remove();     
+                    // If field nombre (name) has less than 6 characters, next to the field will appear a message in orange
+                    if (nombre.length < 6) {
+                        var warning = $("<span>", {
+                            id: "warning-uno",
+                            text: " (Mínimo 6 carácteres)",
+                            style: "color: orange; font-weight: bold"
+                        });
+                        $(this).after(warning);
+                    } 
+                });
+
+                // Email validation
+                $("#email").blur(function(){
+                    var email = $(this).val();
+                    const expresionRegular = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+                    $("#warning-dos").remove();
+                    // Same practice we did with name field, we will do with email field
+                    if (!expresionRegular.test(email)) {
+                        // Warning variable
+                        var warning = $("<span>", {
+                            id: "warning-dos",
+                            text: " (Introduce un email válido)",
+                            style: "color: orange; font-weight: bold"
+                        });
+                        $(this).after(warning);
+                    } 
+                });
+
+                //When the user puts the pointer over the submit button
+                $("#datos button[type='submit']").mouseover(function(){
+                    // Styles to apply
+                    $(this).css({
+                        'background': 'blue',
+                        'color': 'white'
+                    })
+                });
+                
+                //When the user moves the pointer outside the submit button
+                $("#datos button[type='submit']").mouseleave(function(){
+                    // Styles to apply
+                    $(this).css({
+                        'background-color': 'var(--white)',
+                        'color': 'var(--blue-2)'
+                    })
+                });
+
+                // Validation of the form, best practices
+                $("#datos").submit(function(ev){
+                    // 
+                    ev.preventDefault();
+
+                    // Empty array where we will store empty fields
+                    var empty = [];
+
+                    //Select every text type field and iterate them
+                    $('#datos input[type="text"]').each(function(){
+                        var id = $(this).attr("id");
+                        var id_error = id+"-error";
+                        $("#" + id_error).remove();
+                        // If we find empty fields
+                        if($(this).val() === ''){
+                            // That field will be added to empty list
+                            empty.push($(this).prev('label').text().replace(':', ''));
+                            // And also, I add a text in orange color to warn the user about filling those fields are mandatory
+                            var aviso = $("<span>", {
+                                id: id_error,
+                                text: " Este campo es obligatorio",
+                                style: "color: orange; font-weight: bold"
+                            });
+                            $(this).after(aviso)
+                        } 
+
+                    });
+
+
+                });
+ 
+
+            });
+
+        </script>
+        
+    
+    </body>
+</html>

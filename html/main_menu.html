@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pronóstico del tiempo</title>
+        <!-- CSS -->
+        <link rel="stylesheet" href="../css/styles.css">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/SlickNav/1.0.10/slicknav.min.css" integrity="sha512-heyoieAHmpAL3BdaQMsbIOhVvGb4+pl4aGCZqWzX/f1BChRArrBy/XUZDHW9WVi5p6pf92pX4yjkfmdaIYa2QQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+        <!-- cdn jquery -->
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        
+        <!-- CDN JS Plugins-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/SlickNav/1.0.10/jquery.slicknav.min.js" integrity="sha512-FmCXNJaXWw1fc3G8zO3WdwR2N23YTWDFDTM3uretxVIbZ7lvnjHkciW4zy6JGvnrgjkcNEk8UNtdGTLs2GExAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+        <script src="../js/config.js"></script>
+        <script src="../js/api.js"></script>
+
+        <script>
+
+            // Function rainProbability(clima) determines the probabilities of raining, depends of the probability, the image can be a sun, cloudy or raining background in cards.
+            function rainProbability(clima){
+                var fondo = "";
+                var imagenesClima = {
+                    sol: '../imagenes/despejado.jpg',
+                    nublado: '../imagenes/nublado.jpg',
+                    lluvioso: '../imagenes/lluvia.jpg'
+                };
+
+                if (clima < 40){
+                    fondo = imagenesClima.sol;
+                } else if (clima >= 40 && clima <= 60) {
+                    fondo = imagenesClima.nublado;
+                } else {
+                    fondo = imagenesClima.lluvioso;
+                }
+                return fondo;
+            }
+            
+            // The following function will display in real time the forecast of today and the following 6 days
+            function mostrarDatosClimaticos(data) {
+                if (data && data.prevision.length > 0) {
+                    var estacion = data;
+                    var ciudad = estacion.lugar;
+                    var temperatura = estacion.prevision[0].temperaturaMax;
+                    var clima = estacion.prevision[0].probabilidadMaxima;
+
+                    // Clear the result and error message
+                    $('#result').empty();
+                    $('#error-message').empty();
+
+                    // Display name of the city/township
+                    $('#result').append(`<h2>Municipio: ${ciudad}</h2>`);
+
+                    // Container to create the cards for the 7 days of the week
+                    var cardsContainer = $('<div class="cards"></div>');
+                    
+                    var hoy = new Date();
+
+                    // Iterate 7-day-forecast
+                    estacion.prevision.forEach((dia, index) => {
+                        var fecha = new Date(hoy);
+                        fecha.setDate(hoy.getDate() + index);
+
+                        var temperaturaMax = dia.temperaturaMax;
+                        var temperaturaMin = dia.temperaturaMin;
+                        var clima = dia.probabilidadMaxima;
+                        
+                        // Name of the day of the week
+                        var diaNombre = fecha.toLocaleDateString('es-ES', { weekday: 'long' });
+
+                        // Creation of a card for each day
+                        var card = $(`
+                            <div class="card" style="background-image: url(${rainProbability(clima)}) ;">
+                                <p>${diaNombre}, ${fecha.getDate()} de ${fecha.toLocaleDateString('es-ES', { month: 'long' })} de ${fecha.getFullYear()}</p>
+                                <p>Temperatura Max: ${temperaturaMax}°C</p>
+                                <p>Temperatura Min: ${temperaturaMin}°C</p>
+                                <p>Probabilidad de lluvia: ${clima}%</p>
+                            </div>
+                        `);
+                        cardsContainer.append(card);
+                    });
+
+                    // Add 7 cards to results container
+                    $('#result').append(cardsContainer);
+
+                    // Effects to apply for the cards
+                    $('.card').each(function(index) {
+                        $(this).delay(index * 200).queue(function(next) {
+                            $(this).addClass('visible'); 
+                        });
+                    });
+
+                } else {
+                    $('#error-message').html("<p>No se encontraron datos climáticos para este código postal o ciudad.</p>");
+                }
+            }
+            
+
+            $(document).ready(function(){
+       
+
+                $('button#search-btn').mouseover(function(){
+                    $(this).css({
+                        "background-color": "blue",
+                        "color": "white"
+                    });
+                });
+
+                $('button#search-btn').mouseleave(function(){
+                    $(this).css({
+                        "color": "var(--blue-2)",
+                        "background-color": "var(--white)",
+                    });
+                });
+
+
+
+                $('button').click(function() {
+                    var codigoPostal = $('#city').val()
+                    if (codigoPostal){
+                        
+                        obtenerPrediccionMunicipal(codigoPostal, function(resultados) { 
+                            mostrarDatosClimaticos(resultados)
+                            console.log(resultados) 
+
+                        })
+
+                        $("#error-message").html('');
+                    }  else {
+                        $('#error-message').html("<p style='font-weight: bold'>Por favor, introduce un codigo postal español o el nombre de una ciudad.</p>");
+                        return;
+                    }
+                        
+                });
+
+                    
+                $('.sortable-menu').slicknav({
+                    prependTo: '#menumovil'
+                });
+
+            });
+
+        </script>
+    </head>
+    <body>
+        <!-- Header of the page -->
+        <header>  
+            <nav id="topnav" role="navigation">
+                <div id="menumovil"></div>
+                <ul class="sortable-menu" id="menu-main-navigation">
+                    <li class="current"><a href="main_menu.html">Home page</a></li>
+                    <li><a href="form_contact.html">Formulario de contacto</a></li>
+                    <li><a href="provincias.html">Miscelánea</a></li>
+                </ul>     
+            </nav>
+        </header>
+        
+        <section id="card">
+            <div class="wrapper">
+                <div class="container">
+                  <div class="search-container">
+                    <input
+                      type="text"
+                      placeholder="Enter a zip code"
+                      id="city"
+                      value=""
+                    />
+                    <button id="search-btn">Search</button>
+                  </div>
+                  <div id="result">
+                    
+                  </div>
+                  <div id="error-message" style="color: red;"></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer of the page -->
+        <div id="foot">
+            <footer>
+                <span>2024 &copy; Todos los derechos reservados</span>
+            </footer>
+        </div>
+
+    </body>
+</html>
