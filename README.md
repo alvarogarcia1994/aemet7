@@ -23,7 +23,7 @@ Incluye manejo de formularios, eventos, llamadas AJAX, efectos visuales con plug
 - ../html/Provincias.html` → Gestión de provincias con OOP en JavaScript. 
 
 
-# 🛠️ Tecnologías utilizadas  
+# Tecnologías utilizadas  
 - HTML5  
 - CSS3  
 - JavaScript (ES6)  
