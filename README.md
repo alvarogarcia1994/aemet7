@@ -43,7 +43,7 @@ Includes form handling, events, AJAX petitions, visual effects with plugins and 
 - **jQuery usage** to manage DOM and events.  
 - **Events**: `click`, `mouseover`, `blur`, `scroll`, `submit`, `DOMContentLoaded`.  
 - **Forms** with validation (only validates, it doesn't send data because the form is not connected at any database).  
-- **AJAX** with JQuery para consumo de datos meteorológicos.  
+- **AJAX** with JQuery for consumption of meteorological data.  
 - **Oriented Object Programming (OOP)** with classes, objectos and inheretance about provinces management.  
 - **Plugins**: Lightbox2 used for visual effects.  
 - **Customized Functions** with modularity in the code.  
